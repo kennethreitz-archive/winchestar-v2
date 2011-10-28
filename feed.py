@@ -5,16 +5,38 @@ from os import environ
 
 import requests
 
+
 LOGIN_URL = 'http://winchesterstar.com/members/login'
-url = 'http://www.winchesterstar.com/articles/view/stephens_city_woman_dies_in_crash_3_still_in_hospital'
 
 USERNAME = environ.get('WINCHESTAR_USER')
 PASSWORD = environ.get('WINCHESTAR_PASS')
 
 
+class Article(object):
+    """A newspaper article."""
+
+    def __init__(self):
+        super(Article, self).__init__()
+
+        self.title = None
+        self.author = None
+        self.published = None
+        self.body = None
+        self.link = None
+
+    def __repr__(self):
+        return '<article at 0x%x>' % (id(self))
+
+    @staticmethod
+    def new_from_html(content):
+        article = Article()
+
+        return article
+
 
 class Newspaper(object):
     """The Winchester Star interface."""
+
     def __init__(self):
         super(Newspaper, self).__init__()
         self.s = requests.session()
@@ -30,6 +52,12 @@ class Newspaper(object):
 
         self.s.post(LOGIN_URL, data=package)
 
+    def fetch_articles(date=None):
+        """Returns a list of articles for the given date.
+
+        If no date is provided, today is assumed.
+        """
+        pass
 
 
 star = Newspaper()
