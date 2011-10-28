@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from os import environ
+from datetime import datetime
 
+import dateutil.parser
 import requests
 
 
@@ -42,7 +44,7 @@ class Newspaper(object):
         self.s = requests.session()
 
     def login(self, username, password):
-        """Logs into the site."""
+        """Logs into the Newspaper website."""
 
         package = {
             '_method': 'POST',
@@ -52,14 +54,24 @@ class Newspaper(object):
 
         self.s.post(LOGIN_URL, data=package)
 
-    def fetch_articles(date=None):
+    def fetch_articles(self, date=None):
         """Returns a list of articles for the given date.
 
         If no date is provided, today is assumed.
         """
-        pass
+
+        if date is None:
+            date = datetime.utcnow()
+
+        if isinstance(date, basestring):
+            date = dateutil.parser.parse(unicode(date))
+
+        assert isinstance(date, datetime)
+
+        print date
 
 
 star = Newspaper()
 star.login(USERNAME, PASSWORD)
 
+star.fetch_articles("Thu Sep 25 10:36:28 BRST 2003")
