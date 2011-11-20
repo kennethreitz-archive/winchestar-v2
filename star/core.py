@@ -37,5 +37,11 @@ class SavedArticle(db.Model):
 def hello_world():
     return str(SavedArticle.query.all())
 
+
+@app.route('/feed.rss')
+def hello_world():
+    return str(SavedArticle.query.all())
+
+
 if __name__ == '__main__':
     app.run()
