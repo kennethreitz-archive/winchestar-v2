@@ -99,25 +99,26 @@ class Newspaper(object):
         If no date is provided, today is assumed.
         """
 
+        # Assume today.
         if date is None:
             date = datetime.today()
 
+        # Convert string dates (for the lazy).
         if isinstance(date, basestring):
             date = dateutil.parser.parse(unicode(date))
 
+        # Dates only, please.
         assert isinstance(date, datetime)
 
         timestamp = date.strftime('%Y-%m-%d')
         url = EDITION_URL.format(timestamp)
 
-        # The page for the current day.
+        # Grab the page for the day.
         r = self.s.get(url)
-
 
         # Parse it for links.
         soup = BeautifulSoup(r.content)
 
-        # List of requests to make.
         reqs = []
 
         for a in soup.findAll('a'):
@@ -129,11 +130,11 @@ class Newspaper(object):
                 reqs.append(req)
 
         # Get all the articles.
-        # reqs = reqs[:4]  # testing.
         reqs = async.map(reqs, size=5)
 
         articles = []
 
+        # Parse them for Articles.
         for r in reqs:
             article = Article.new_from_html(r.content)
 
@@ -146,10 +147,5 @@ class Newspaper(object):
 
 star = Newspaper()
 star.login(USERNAME, PASSWORD)
-for article in star.fetch_articles():
-    print article.title
-    print article.author
-    print article.published
 
-    print len(article.body)
-    print
+print star.fetch_articles()
