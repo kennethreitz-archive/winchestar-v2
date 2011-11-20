@@ -7,6 +7,8 @@ star.core
 The core of the star.
 """
 
+from os import environ
+
 from flask import Flask
 from flaskext.sqlalchemy import SQLAlchemy
 
