@@ -10,7 +10,7 @@ from requests import async
 from BeautifulSoup import BeautifulSoup
 
 
-HOME_URL = 'http://www.winchesterstar.com'
+HOME_URL = 'http://winchesterstar.com'
 LOGIN_URL = HOME_URL + '/members/login'
 EDITION_URL = HOME_URL + '/pages/choose_edition/date:{0}'
 
@@ -35,6 +35,8 @@ class Article(object):
 
     @staticmethod
     def new_from_html(content):
+        """Returns a new article instance, built from the given HTML string."""
+
         article = Article()
 
         this_year = str(datetime.now().year)
@@ -64,6 +66,10 @@ class Article(object):
             article.author = art.find('div').find('div').find('em').text.replace('By ', '')
         except AttributeError:
             pass
+
+        # Skip Image-only posts.
+        if len(article.body) < 1000:
+            return None
 
         return article
 
@@ -121,18 +127,19 @@ class Newspaper(object):
                 url = HOME_URL + link
                 req = async.get(url, cookies=self.s.cookies)
                 reqs.append(req)
-                self.s.get(url)
 
         # Get all the articles.
-        # reqs = reqs[:2]  # testing.
-        reqs = async.map(reqs)
+        # reqs = reqs[:4]  # testing.
+        reqs = async.map(reqs, size=5)
 
         articles = []
 
         for r in reqs:
             article = Article.new_from_html(r.content)
-            article.link = r.url
-            articles.append(article)
+
+            if article:
+                article.link = r.url
+                articles.append(article)
 
         return articles
 
@@ -141,7 +148,8 @@ star = Newspaper()
 star.login(USERNAME, PASSWORD)
 for article in star.fetch_articles():
     print article.title
-    print article.__dict__
+    print article.author
+    print article.published
+
+    print len(article.body)
     print
-    print
-# star.fetch_articles('september 3rd')
