@@ -9,13 +9,15 @@ The core of the star.
 
 from os import environ
 
-from flask import Flask
+from flask import Flask, render_template
 from flaskext.sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
+app.debug = True
+
 db = SQLAlchemy(app)
 
 
@@ -69,9 +71,13 @@ def hello_world():
     return s
 
 
-@app.route('/feed.rss')
+@app.route('/feed.atom')
 def rss_feed():
-    return str(SavedArticle.query.all())
+    articles = SavedArticle.query.order_by(
+        desc(SavedArticle.published)
+    ).limit(30).all()
+
+    return render_template('feed.atom', articles=articles)
 
 
 def function():
