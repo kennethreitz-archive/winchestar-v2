@@ -2,3 +2,6 @@ distribute==0.6.19
 requests==0.8.2
 wsgiref==0.1.2
 python-dateutil==1.5
+BeautifulSoup==3.2.0
+gevent==0.13.6
+greenlet==0.3.1
