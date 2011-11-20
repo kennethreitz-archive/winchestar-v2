@@ -6,13 +6,13 @@ from datetime import datetime
 
 import dateutil.parser
 import requests
-from lxml.html import html5parser, tostring
-from lxml import etree
+from requests import async
+from BeautifulSoup import BeautifulSoup
 
 
-HOME_URL = 'http://www.winchesterstar.com/'
-LOGIN_URL = HOME_URL + 'members/login'
-EDITION_URL = HOME_URL + 'pages/choose_edition/date:{0}'
+HOME_URL = 'http://www.winchesterstar.com'
+LOGIN_URL = HOME_URL + '/members/login'
+EDITION_URL = HOME_URL + '/pages/choose_edition/date:{0}'
 
 USERNAME = environ.get('WINCHESTAR_USER')
 PASSWORD = environ.get('WINCHESTAR_PASS')
@@ -36,6 +36,34 @@ class Article(object):
     @staticmethod
     def new_from_html(content):
         article = Article()
+
+        this_year = str(datetime.now().year)
+
+        soup = BeautifulSoup(content)
+
+        art = max(soup.findAll('td'), key=len)
+        article.title = art.find('h2').text
+        article.published = (
+            art.findNext('div').text.split('By')[0].
+                split(this_year)[0] + this_year)
+
+        # Datetime it.
+        article.published = dateutil.parser.parse(unicode(article.published))
+
+        _content = (
+            max(str(art).split('<hr />'), key=len).lstrip().
+                split('</style>')[-1].lstrip())
+        article.body = BeautifulSoup(_content).prettify()
+
+        try:
+            article.subtitle = art.find('h3').text
+        except AttributeError:
+            pass
+
+        try:
+            article.author = art.find('div').find('div').find('em').text.replace('By ', '')
+        except AttributeError:
+            pass
 
         return article
 
@@ -75,54 +103,45 @@ class Newspaper(object):
 
         timestamp = date.strftime('%Y-%m-%d')
         url = EDITION_URL.format(timestamp)
+
+        # The page for the current day.
         r = self.s.get(url)
 
-        print r
-        print r.content
-        # from lxml.html import tostring, html5parser
-        # t = html5parser.fromstring(r.content)
 
+        # Parse it for links.
+        soup = BeautifulSoup(r.content)
 
+        # List of requests to make.
+        reqs = []
 
-        # from lxml.cssselect import CSSSelector
+        for a in soup.findAll('a'):
+            link = a.get('href')
 
-        # print dir(t)
+            if link and ('homepage_links' in link):
+                url = HOME_URL + link
+                req = async.get(url, cookies=self.s.cookies)
+                reqs.append(req)
+                self.s.get(url)
 
-        # print t.text
-        # print [e.get('href') for e in CSSSelector('a')(t)]
+        # Get all the articles.
+        # reqs = reqs[:2]  # testing.
+        reqs = async.map(reqs)
 
-        # print t.xpath('//a/@href')
-        # print t.xpath('//a')
+        articles = []
 
-        # print t
-        # print dir(t)
-        # print t.cssselect('a')
+        for r in reqs:
+            article = Article.new_from_html(r.content)
+            article.link = r.url
+            articles.append(article)
 
-        # Convert to epic html.
-        # content = tostring(html5parser.fromstring(r.content))
-        # t = etree.fromstring(content)
-        # t.resolve_base_href()
-        # t.make_links_absolute(r.url)
-        # for tup in t.iterlinks():
-        #     print tup
-        # print dir(t)
-        # for u in t.xpath('//a'):
-            # print u
-
-        # print t.findall('a')
-        # print type(t)
-
-        # print dir(p)
-        # for url in t.iterfind('a'):
-            # print url
-        # p.getroot().make_links_absolute()
-        # print r
-        # print r.history
-        # print r.headers
-        # print r.content
+        return articles
 
 
 star = Newspaper()
 star.login(USERNAME, PASSWORD)
-star.fetch_articles()
+for article in star.fetch_articles():
+    print article.title
+    print article.__dict__
+    print
+    print
 # star.fetch_articles('september 3rd')
