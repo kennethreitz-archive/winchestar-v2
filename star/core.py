@@ -12,6 +12,7 @@ from os import environ
 from flask import Flask, render_template
 from flaskext.sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
+from rfc3339 import rfc3339
 
 
 app = Flask(__name__)
@@ -52,6 +53,10 @@ class SavedArticle(db.Model):
         if not list(SavedArticle.query.filter_by(link=self.link)):
             db.session.add(self)
             db.session.commit()
+
+    @property
+    def rfc_published(self):
+        return rfc3339(self.published)
 
 
 

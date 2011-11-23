@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xml:lang="en-US" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
-  <id>tag:winchesterstar.com:</id>
+  <id>tag:winchesterstar.com,2011-11-23:Posts</id>
   <link type="text/html" rel="alternate" href="http://winchesterstar.com"/>
   <link type="application/atom+xml" rel="self" href="http://winchestar.herokuapp.com/feed.atom"/>
   <title>Winchester Star Articles</title>
-  <description>Winchester Star Article aggregation. Do not use if you are not a paid subscriber.</description>
   <updated>2011-11-15T12:09:45-08:00</updated>
   <language>en-us</language>
 
   {% for article in articles %}
   <entry>
     <id>tag:winchesterstar.com:Post/{{ article.id }}</id>
-    <published>{{ article.published }}</published>
+    <published>{{ article.rfc_published }}</published>
     <updated>2011-11-15T12:09:45-08:00</updated>
     <link type="text/html" rel="alternate" href="{{ article.link }}"/>
     <title>{{ article.title }}</title>
