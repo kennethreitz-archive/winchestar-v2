@@ -32,10 +32,14 @@ def cleardb():
 @manager.option('-e', '--end', dest='end', default=None)
 def fetch(start=None, end=None):
     for article in star.fetch_articles(start, end):
-        print 'Fetched: {0}'.format(article.title)
+        try:
+            print 'Fetched: {0}'.format(article.title)
+            article = SavedArticle.from_article(article)
+            article.save()
+        except Exception:
+            pass
 
-        article = SavedArticle.from_article(article)
-        article.save()
+    print 'Done!'
 
 
 if __name__ == "__main__":
