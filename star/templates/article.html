@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <div class='page-header'>
+        <h2>{{ article.title }}</h2>
+
+        <p>
+            {% if article.author %}
+                By {{ article.author }} <br/>
+            {% endif %}
+
+            <a href="{{ article.link }}">
+                <b>{{ article.published.strftime('%Y-%m-%d') }}</b>
+            </a>
+        </p>
+
+    </div>
+
+{% endblock %}
+
+
+{% block content %}
+
+    {{ article.body|safe }}
+
+{% endblock %}

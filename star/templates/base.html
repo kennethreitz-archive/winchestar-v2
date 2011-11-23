@@ -1,0 +1,49 @@
+<html>
+<head>
+    <title>Winchester Star Articles</title>
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+</head>
+<body>
+
+<div class='container'>
+
+
+{% block header %}
+<div class='page-header'>
+    <h1>Winchester Star Articles</h1>
+</div>
+
+<p>
+    <a href="{{ url_for('atom_feed') }}"><code>Atom Feed</code></a>
+</p>
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right"><a href="#">Back to top</a></p>
+    <p>
+      <em>Only for use by paid subscribers of The Winchester Star.</em>
+    </p>
+  </div>
+</footer>
+
+<script type="text/javascript">
+  var _gauges = _gauges || [];
+  (function() {
+    var t   = document.createElement('script');
+    t.type  = 'text/javascript';
+    t.async = true;
+    t.id    = 'gauges-tracker';
+    t.setAttribute('data-site-id', '4ecc95d3f5a1f53b9f000001');
+    t.src = '//secure.gaug.es/track.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(t, s);
+  })();
+</script>
+</body>
+</html>
