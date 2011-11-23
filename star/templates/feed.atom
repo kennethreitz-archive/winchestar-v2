@@ -7,23 +7,25 @@
   <updated>2011-11-15T12:09:45-08:00</updated>
 
   {% for article in articles %}
-  <entry>
-    <id>tag:winchesterstar.com:Post/{{ article.id }}</id>
-    <published>{{ article.rfc_published }}</published>
-    <updated>2011-11-15T12:09:45-08:00</updated>
-    <link type="text/html" rel="alternate" href="{{ article.link }}"/>
-    <title>{{ article.title }}</title>
-    <content type="html">
-      {{ article.body }}
-    </content>
+    <entry>
+      <id>tag:winchesterstar.com:Post/{{ article.id }}</id>
+      <published>{{ article.rfc_published }}</published>
+      <updated>{{ article.rfc_published }}</updated>
+      <link type="text/html" rel="alternate" href="{{ article.link }}"/>
+      <title>{{ article.title }}</title>
+      <content type="html">
+        {{ article.body }}
+      </content>
 
-    {% if article.author %}
-    <author>
-      <name>{{ article.author }}</name>
-    </author>
-    {% endif %}
 
-  </entry>
+      <author>
+        {% if article.author %}
+          <name>{{ article.author }}</name>
+        {% endif %}
+      </author>
+
+
+    </entry>
   {% endfor %}
 
 </feed>
