@@ -10,9 +10,6 @@
         {% for article in arts %}
             <li>
                 <a href="{{ url_for('single_article', article_id=article.id) }}">
-                    &nbsp;&nbsp;
-                </a>
-                <a href="{{ article.link }}" id="{{ article.id }}">
                     {{ article.title }}
                 </a>
 
