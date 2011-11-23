@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>Winchester Star Articles</title>
+</head>
+<body>
+
+<h1>Winchester Star Articles</h1>
+
+<ul>
+{% for article in articles %}
+    <li>
+    <a href="{{ article.link }}">
+        {{ article.title }}
+    </a>
+    </li>
+{% endfor %}
+
+</ul>
+
+</body>
+</html>

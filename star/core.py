@@ -63,17 +63,10 @@ class SavedArticle(db.Model):
 
 @app.route('/')
 def list_articles():
-    s = ''
-    # articles = SavedArticle.query.all()
-    articles = SavedArticle.query.order_by(desc(SavedArticle.published)).limit(30).all()
+    # GRAB THEM ALL!
+    articles = SavedArticle.query.order_by(desc(SavedArticle.published)).all()
 
-    for a in articles:
-        s += str(a.title) + '  ' + str(a.link)
-        s += '<br />'
-        print a
-
-
-    return s
+    render_template('index.html', articles=articles)
 
 
 @app.route('/feed.atom')
