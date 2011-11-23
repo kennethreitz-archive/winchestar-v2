@@ -62,7 +62,7 @@ class SavedArticle(db.Model):
 
 
 @app.route('/')
-def hello_world():
+def list_articles():
     s = ''
     # articles = SavedArticle.query.all()
     articles = SavedArticle.query.order_by(desc(SavedArticle.published)).limit(30).all()
@@ -80,7 +80,7 @@ def hello_world():
 def rss_feed():
     articles = SavedArticle.query.order_by(
         desc(SavedArticle.published)
-    ).limit(30).all()
+    ).limit(40).all()
 
     r = make_response(render_template('feed.atom', articles=articles))
     r.headers['Content-Type'] = 'application/atom+xml'
