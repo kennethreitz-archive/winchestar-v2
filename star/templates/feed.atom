@@ -5,7 +5,6 @@
   <link type="application/atom+xml" rel="self" href="http://winchestar.herokuapp.com/feed.atom"/>
   <title>Winchester Star Articles</title>
   <updated>2011-11-15T12:09:45-08:00</updated>
-  <language>en-us</language>
 
   {% for article in articles %}
   <entry>
