@@ -9,7 +9,7 @@ The core of the star.
 
 from os import environ
 
-from flask import Flask, render_template
+from flask import Flask, render_template, make_response
 from flaskext.sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from rfc3339 import rfc3339
@@ -82,7 +82,11 @@ def rss_feed():
         desc(SavedArticle.published)
     ).limit(30).all()
 
-    return render_template('feed.atom', articles=articles)
+    r = make_response(render_template('feed.atom', articles=articles))
+    r.headers['Content-Type'] = 'application/atom+xml'
+
+    return r
+
 
 
 def function():
