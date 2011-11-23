@@ -76,6 +76,13 @@ def list_articles():
 
     return render_template('index.html', articles=articles)
 
+@app.route('/article/<article_id>')
+def single_article(article_id):
+
+    article = SavedArticle.query.filter_by(id=article_id).first()
+
+    return render_template('article.html', article=article)
+
 
 @app.route('/feed.atom')
 def atom_feed():
