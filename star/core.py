@@ -8,11 +8,13 @@ The core of the star.
 """
 
 from os import environ
+from collections import OrderedDict
 
 from flask import Flask, render_template, make_response
 from flaskext.sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from rfc3339 import rfc3339
+
 
 
 app = Flask(__name__)
@@ -63,7 +65,14 @@ class SavedArticle(db.Model):
 @app.route('/')
 def list_articles():
     # GRAB THEM ALL!
-    articles = SavedArticle.query.order_by(desc(SavedArticle.published)).all()
+    articles = OrderedDict()
+    _articles =  SavedArticle.query.order_by(desc(SavedArticle.published)).all()
+
+    # Big ordered dict of dates.
+    for article in _articles:
+        if not article.published in articles:
+            articles[article.published] = []
+        articles[article.published].append(article)
 
     return render_template('index.html', articles=articles)
 
