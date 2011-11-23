@@ -60,17 +60,16 @@ class SavedArticle(db.Model):
 
 
 
-
 @app.route('/')
 def list_articles():
     # GRAB THEM ALL!
     articles = SavedArticle.query.order_by(desc(SavedArticle.published)).all()
 
-    render_template('index.html', articles=articles)
+    return render_template('index.html', articles=articles)
 
 
 @app.route('/feed.atom')
-def rss_feed():
+def atom_feed():
     articles = SavedArticle.query.order_by(
         desc(SavedArticle.published)
     ).limit(40).all()
@@ -79,11 +78,6 @@ def rss_feed():
     r.headers['Content-Type'] = 'application/atom+xml'
 
     return r
-
-
-
-def function():
-    pass
 
 if __name__ == '__main__':
     app.run()
