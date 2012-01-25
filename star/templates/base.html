@@ -17,7 +17,7 @@
 <div class="navbar navbar-static">
   <div class="navbar-inner">
     <div class="container">
-        <a class="brand" href="#">
+        <a class="brand" href="/">
           Winchester Star Articles
         </a>
         <ul class="nav">
@@ -25,10 +25,11 @@
             <a href="#"
                   class="dropdown-toggle"
                   data-toggle="dropdown">
-                  Recent
+                  Show
                   <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
+              <li><a href="{{ url_for('list_articles') }}">Recent Articles</a></li>
               <li><a href="{{ url_for('list_all_articles') }}">All Articles</a></li>
             </ul>
           </li>
