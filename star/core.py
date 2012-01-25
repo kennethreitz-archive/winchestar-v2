@@ -61,12 +61,15 @@ class SavedArticle(db.Model):
         return rfc3339(self.published)
 
 
-
-@app.route('/')
-def list_articles():
+def list_n_articles(n=None):
     # GRAB THEM ALL!
     articles = OrderedDict()
-    _articles =  SavedArticle.query.order_by(desc(SavedArticle.published)).all()
+    _articles =  SavedArticle.query.order_by(desc(SavedArticle.published))
+
+    if n is None:
+        _articles = _articles.all()
+    else:
+        _articles = _articles.limit(n)
 
     # Big ordered dict of dates.
     for article in _articles:
@@ -74,7 +77,20 @@ def list_articles():
             articles[article.published] = []
         articles[article.published].append(article)
 
+    return articles
+
+
+@app.route('/')
+def list_articles():
+    articles = list_n_articles(100)
     return render_template('index.html', articles=articles)
+
+
+@app.route('/all')
+def list_all_articles():
+    articles = list_n_articles()
+    return render_template('index.html', articles=articles)
+
 
 @app.route('/article/<article_id>')
 def single_article(article_id):

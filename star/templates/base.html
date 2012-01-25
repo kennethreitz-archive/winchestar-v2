@@ -3,6 +3,10 @@
     <title>Winchester Star Articles</title>
     <link rel="stylesheet" href="https://raw.github.com/twitter/bootstrap/2.0-wip/bootstrap.min.css">
     <meta name="robots" content="noodp" >
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://markdotto.com/bs2/js/bootstrap-dropdown.js"></script>
+
 </head>
 <body>
 
@@ -10,13 +14,31 @@
 
 
 {% block header %}
-<div class='page-header'>
-    <h1>Winchester Star Articles</h1>
+<div class="navbar navbar-static">
+  <div class="navbar-inner">
+    <div class="container">
+        <a class="brand" href="#">
+          Winchester Star Articles
+        </a>
+        <ul class="nav">
+          <li class="dropdown">
+            <a href="#"
+                  class="dropdown-toggle"
+                  data-toggle="dropdown">
+                  Recent
+                  <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="{{ url_for('list_all_articles') }}">All Articles</a></li>
+            </ul>
+          </li>
+          <li><a href="{{ url_for('atom_feed') }}">Atom Feed</a></li>
+        </ul>
+
+    </div>
+  </div>
 </div>
 
-<p>
-    <a href="{{ url_for('atom_feed') }}"><code>Atom Feed</code></a>
-</p>
 {% endblock %}
 
 {% block content %}
