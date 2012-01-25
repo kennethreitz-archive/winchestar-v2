@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
-{% block header %}
+{% block content %}
+
     <div class='page-header'>
         <h2>{{ article.title }}</h2>
 
@@ -15,11 +16,6 @@
         </p>
 
     </div>
-
-{% endblock %}
-
-
-{% block content %}
 
     {{ article.body|safe }}
 
