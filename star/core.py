@@ -17,8 +17,6 @@ from raven.contrib.flask import Sentry
 from sqlalchemy import desc
 from rfc3339 import rfc3339
 
-from .sentry import configure_raven
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
