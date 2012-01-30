@@ -22,7 +22,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 app.debug = True
 
 # Bootstrap raven config from environ.
-raven.load(os.environ['SENTRY_DSN'], app.config)
+raven.load(environ['SENTRY_DSN'], app.config)
 
 db = SQLAlchemy(app)
 sentry = Sentry(app)
