@@ -19,9 +19,9 @@ from rfc3339 import rfc3339
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 app.debug = True
 
+# Bootstrap raven config from environ.
 raven.load(os.environ['SENTRY_DSN'], app.config)
 
 db = SQLAlchemy(app)
