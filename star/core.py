@@ -10,18 +10,24 @@ The core of the star.
 from os import environ
 from collections import OrderedDict
 
+import raven
 from flask import Flask, render_template, make_response
 from flaskext.sqlalchemy import SQLAlchemy
+from raven.contrib.flask import Sentry
 from sqlalchemy import desc
 from rfc3339 import rfc3339
 
-
+from .sentry import configure_raven
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 app.debug = True
 
+raven.load(os.environ['SENTRY_DSN'], app.config)
+
 db = SQLAlchemy(app)
+sentry = Sentry(app)
 
 
 class SavedArticle(db.Model):
