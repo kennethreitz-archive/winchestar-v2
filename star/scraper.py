@@ -64,7 +64,7 @@ class Article(object):
         _content = (
             max(unicode(art).split('<hr />'), key=len).lstrip().
                 split('</style>')[-1].lstrip())
-        article.body = BeautifulSoup(_content).prettify().decode('ascii', 'replace')
+        article.body = BeautifulSoup(_content).prettify()
 
         try:
             article.subtitle = art.find('h3').text
