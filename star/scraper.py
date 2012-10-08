@@ -25,6 +25,7 @@ EDITION_URL = HOME_URL + '/pages/choose_edition/date:{0}'
 # Credentials.
 USERNAME = environ.get('WINCHESTAR_USER')
 PASSWORD = environ.get('WINCHESTAR_PASS')
+LOGIN_REQUIRED = False
 
 
 class Article(object):
@@ -99,7 +100,8 @@ class Newspaper(object):
             'data[Member][password]': password,
         }
 
-        self.s.post(LOGIN_URL, data=package)
+        if LOGIN_REQUIRED:
+            self.s.post(LOGIN_URL, data=package)
 
 
     def fetch_articles(self, start_date=None, end_date=None):
