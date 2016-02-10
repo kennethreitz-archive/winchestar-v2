@@ -17,14 +17,14 @@ from .utils import date, date_range
 
 
 # Configuration
-HOME_URL = 'http://winchesterstar.com'
+HOME_URL = 'http://www.winchesterstar.com'
 LOGIN_URL = HOME_URL + '/members/login'
 EDITION_URL = HOME_URL + '/articles/setEdition/{0}'
 
 # Credentials.
 USERNAME = environ.get('WINCHESTAR_USER')
 PASSWORD = environ.get('WINCHESTAR_PASS')
-LOGIN_REQUIRED = False
+LOGIN_REQUIRED = True
 
 
 class Article(object):
@@ -50,35 +50,27 @@ class Article(object):
 
         this_year = str(datetime.now().year)
 
-        soup = BeautifulSoup(content)
+        from pyquery import PyQuery as pq
 
-        art = max(soup.findAll('td'), key=len)
-        article.title = art.find('h2').text
-        article.published = (
-            art.findNext('div').text.split('By')[0].
-                split(this_year)[0] + this_year)
+        d = pq(content)
 
-        # Datetime it.
+
+        from html2text import html2text
+
+
+        article.title = d('h1.title').text()
+        article.published = published = d('p.posted').text().replace('Posted: ', '')
         article.published = date(unicode(article.published))
 
-        _content = (
-            max(unicode(art).split('<hr />'), key=len).lstrip().
-                split('</style>')[-1].lstrip())
-        article.body = BeautifulSoup(_content).prettify()
+        story = html2text(str(d('div.story')))
+        story = story.replace('/files/uploads', HOME_URL + '/files/uploads')
+        article.body = story
 
-        try:
-            article.subtitle = art.find('h3').text
-        except AttributeError:
-            pass
-
-        try:
-            article.author = art.find('div').find('div').find('em').text.replace('By ', '')
-        except AttributeError:
-            pass
+        article.author = d('p.byline > span').text()
 
         # Skip Image-only posts.
-        if len(article.body) < 1000:
-            return None
+        # if len(article.body) < 1000:
+        #     return None
 
         return article
 
@@ -99,8 +91,48 @@ class Newspaper(object):
             'data[Member][password]': password,
         }
 
-        if LOGIN_REQUIRED:
-            self.s.post(LOGIN_URL, data=package)
+        r = self.s.post(LOGIN_URL, data=package)
+
+    def get_url(self, path, relative=False):
+        if relative:
+            url = HOME_URL + path
+        else:
+            url = path
+
+        return self.s.get(url)
+
+
+    def article_from_url(self, path):
+        r = self.get_url(path)
+
+        article = Article.new_from_html(r.content)
+
+        article.link = r.url
+        return article
+
+    def urls_from_edition_url(self, url):
+
+        # Grab the page for the day.
+        r = self.get_url(url)
+
+        # Parse it for links.
+        soup = BeautifulSoup(r.content)
+
+        links = []
+
+        for a in soup.findAll('a'):
+            link = a.get('href')
+
+            if link and ('article' in link):
+                url = HOME_URL + link
+                links.append(url)
+
+        return links
+
+
+
+                # req = requests.get(url, cookies=self.s.cookies)
+                # reqs.append(req)
 
 
     def fetch_articles(self, start_date=None, end_date=None):
@@ -118,33 +150,18 @@ class Newspaper(object):
 
         # For every date...
         for date in date_range(start_date, end_date):
+            print date
 
             timestamp = date.strftime('%Y-%m-%d')
             url = EDITION_URL.format(timestamp)
 
-            # Grab the page for the day.
-            r = self.s.get(url)
+            urls = self.urls_from_edition_url(url)
+            print urls
 
-            # Parse it for links.
-            soup = BeautifulSoup(r.content)
+            for url in urls:
+                yield self.article_from_url(url)
 
-            reqs = []
 
-            for a in soup.findAll('a'):
-                link = a.get('href')
-
-                if link and ('homepage_links' in link):
-                    url = HOME_URL + link
-                    req = requests.get(url, cookies=self.s.cookies)
-                    reqs.append(req)
-
-            # Parse them for Articles.
-            for r in reqs:
-                article = Article.new_from_html(r.content)
-
-                if article:
-                    article.link = r.url
-                    yield article
 
 
 star = Newspaper()

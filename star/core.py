@@ -73,7 +73,7 @@ def list_n_articles(n=None):
 
     # Big ordered dict of dates.
     for article in _articles:
-        if articles not in article.published:
+        if article.published not in articles:
             articles[article.published] = []
         articles[article.published].append(article)
 
