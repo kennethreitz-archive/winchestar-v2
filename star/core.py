@@ -10,7 +10,6 @@ The core of the star.
 from os import environ
 from collections import OrderedDict
 
-import raven
 from flask import Flask, render_template, make_response
 from flaskext.sqlalchemy import SQLAlchemy
 from raven.contrib.flask import Sentry
@@ -21,11 +20,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 app.debug = True
 
-# Bootstrap raven config from environ.
-raven.load(environ['SENTRY_DSN'], app.config)
-
 db = SQLAlchemy(app)
-sentry = Sentry(app)
+sentry = Sentry(app, dsn=environ['SENTRY_DSN'])
 
 
 class SavedArticle(db.Model):
@@ -68,7 +64,7 @@ class SavedArticle(db.Model):
 def list_n_articles(n=None):
     # GRAB THEM ALL!
     articles = OrderedDict()
-    _articles =  SavedArticle.query.order_by(desc(SavedArticle.published))
+    _articles = SavedArticle.query.order_by(desc(SavedArticle.published))
 
     if n is None:
         _articles = _articles.all()
@@ -77,7 +73,7 @@ def list_n_articles(n=None):
 
     # Big ordered dict of dates.
     for article in _articles:
-        if not article.published in articles:
+        if articles not in article.published:
             articles[article.published] = []
         articles[article.published].append(article)
 
