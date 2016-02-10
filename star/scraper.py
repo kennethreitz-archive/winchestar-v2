@@ -59,7 +59,7 @@ class Article(object):
 
 
         article.title = d('h1.title').text()
-        article.published = published = d('p.posted').text().replace('Posted: ', '')
+        article.published = d('p.posted').text().replace('Posted: ', '')
         article.published = date(unicode(article.published))
 
         story = html2text(str(d('div.story')))
@@ -99,13 +99,19 @@ class Newspaper(object):
         else:
             url = path
 
-        return self.s.get(url)
+        r = self.s.get(url)
+        # r.encoding = None
+        return r
 
 
     def article_from_url(self, path):
         r = self.get_url(path)
+        content = r.text
+        content = content.replace(u"\u2018", "'").replace(u"\u2019", "'")
+        content = content.replace(u'\xa0', '')
+        content = content.replace(u'\u2014', '--')
 
-        article = Article.new_from_html(r.content)
+        article = Article.new_from_html(content)
 
         article.link = r.url
         return article
@@ -118,14 +124,16 @@ class Newspaper(object):
         # Parse it for links.
         soup = BeautifulSoup(r.content)
 
-        links = []
+        links = set()
 
         for a in soup.findAll('a'):
             link = a.get('href')
 
             if link and ('article' in link):
                 url = HOME_URL + link
-                links.append(url)
+
+            if 'setEdition' not in url:
+                links.add(url)
 
         return links
 
@@ -156,9 +164,9 @@ class Newspaper(object):
             url = EDITION_URL.format(timestamp)
 
             urls = self.urls_from_edition_url(url)
-            print urls
 
             for url in urls:
+                print url
                 yield self.article_from_url(url)
 
 

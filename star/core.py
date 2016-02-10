@@ -27,11 +27,11 @@ sentry = Sentry(app, dsn=environ['SENTRY_DSN'])
 
 class SavedArticle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(140), unique=False)
-    author = db.Column(db.String(80), unique=False)
+    title = db.Column(db.String(800), unique=False)
+    author = db.Column(db.String(140), unique=False)
     published = db.Column(db.DateTime(), unique=False)
     body = db.Column(db.Text(), unique=False)
-    link = db.Column(db.String(140), unique=True)
+    link = db.Column(db.String(800), unique=True)
 
     def __init__(self):
         pass
@@ -107,6 +107,9 @@ def atom_feed():
     articles = SavedArticle.query.order_by(
         desc(SavedArticle.published)
     ).limit(40).all()
+
+    for i, article in enumerate(articles):
+        article.body = markdown(article.body)
 
     r = make_response(render_template('feed.atom', articles=articles))
     r.headers['Content-Type'] = 'application/atom+xml'

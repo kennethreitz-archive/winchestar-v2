@@ -35,10 +35,13 @@ def fetch(start=None, end=None):
     for article in star.fetch_articles(start, end):
         try:
             print 'Fetched: {0}'.format(article.title)
-            article = SavedArticle.from_article(article)
-            article.save()
-        except Exception:
-            pass
+        except UnicodeEncodeError:
+            print 'Fetched: <bad unicode>'
+            print '      {}'.format(repr(article.title))
+
+        article = SavedArticle.from_article(article)
+        article.save()
+        print
 
     print 'Done!'
 
