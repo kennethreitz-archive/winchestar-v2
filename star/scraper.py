@@ -19,7 +19,7 @@ from .utils import date, date_range
 # Configuration
 HOME_URL = 'http://winchesterstar.com'
 LOGIN_URL = HOME_URL + '/members/login'
-EDITION_URL = HOME_URL + '/pages/choose_edition/date:{0}'
+EDITION_URL = HOME_URL + '/articles/setEdition/{0}'
 
 # Credentials.
 USERNAME = environ.get('WINCHESTAR_USER')
