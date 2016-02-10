@@ -11,7 +11,6 @@ from os import environ
 from datetime import datetime
 
 import requests
-from requests import async
 from BeautifulSoup import BeautifulSoup
 
 from .utils import date, date_range
@@ -136,11 +135,8 @@ class Newspaper(object):
 
                 if link and ('homepage_links' in link):
                     url = HOME_URL + link
-                    req = async.get(url, cookies=self.s.cookies)
+                    req = requests.get(url, cookies=self.s.cookies)
                     reqs.append(req)
-
-            # Get all the articles.
-            reqs = async.map(reqs, size=5)
 
             # Parse them for Articles.
             for r in reqs:
