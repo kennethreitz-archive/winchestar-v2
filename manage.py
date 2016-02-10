@@ -27,6 +27,7 @@ def cleardb():
 
     db.session.commit()
 
+
 @manager.command
 @manager.option('-s', '--start', dest='start', default=datetime.now())
 @manager.option('-e', '--end', dest='end', default=None)
