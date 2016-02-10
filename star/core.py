@@ -15,6 +15,7 @@ from flaskext.sqlalchemy import SQLAlchemy
 from raven.contrib.flask import Sentry
 from sqlalchemy import desc
 from rfc3339 import rfc3339
+from mistune import markdown
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
@@ -96,6 +97,7 @@ def list_all_articles():
 def single_article(article_id):
 
     article = SavedArticle.query.filter_by(id=article_id).first()
+    article.body = markdown(article.body)
 
     return render_template('article.html', article=article)
 
