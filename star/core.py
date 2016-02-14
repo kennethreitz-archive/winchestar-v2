@@ -81,27 +81,6 @@ def list_n_articles(n=None):
     return articles
 
 
-@app.route('/')
-def list_articles():
-    articles = list_n_articles(100)
-    return render_template('index.html', articles=articles)
-
-
-@app.route('/all')
-def list_all_articles():
-    articles = list_n_articles()
-    return render_template('index.html', articles=articles)
-
-
-@app.route('/article/<article_id>')
-def single_article(article_id):
-
-    article = SavedArticle.query.filter_by(id=article_id).first()
-    article.body = markdown(article.body)
-
-    return render_template('article.html', article=article)
-
-
 @app.route('/feed.atom')
 def atom_feed():
     articles = SavedArticle.query.order_by(
