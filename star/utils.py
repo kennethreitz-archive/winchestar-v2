@@ -9,12 +9,16 @@ Utilities.
 
 import datetime
 import dateutil.parser
+import pytz
 
 
 def date(date):
     """Convert string dates (for the lazy)."""
     if isinstance(date, basestring):
         date = dateutil.parser.parse(unicode(date))
+
+    # Provided dates are in EST.
+    date = pytz.utc.localize(date)
 
     # Dates only, please.
     assert isinstance(date, datetime.datetime)
