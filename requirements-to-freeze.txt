@@ -1,0 +1,13 @@
+BeautifulSoup
+Flask
+Flask-Script
+Flask-SQLAlchemy
+gunicorn
+html2text
+mistune
+psycopg2
+pyquery
+python-dateutil==1.5
+raven
+requests
+pytz
