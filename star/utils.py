@@ -18,7 +18,7 @@ def date(date):
         date = dateutil.parser.parse(unicode(date))
 
     # Provided dates are in EST.
-    date = pytz.est.localize(date)
+    date = date.replace(tzinfo=pytz.timezone('US/Eastern'))
 
     # Dates only, please.
     assert isinstance(date, datetime.datetime)
