@@ -62,29 +62,12 @@ class SavedArticle(db.Model):
         return rfc3339(self.published)
 
 
-def list_n_articles(n=None):
-    # GRAB THEM ALL!
-    articles = OrderedDict()
-    _articles = SavedArticle.query.order_by(desc(SavedArticle.published))
-
-    if n is None:
-        _articles = _articles.all()
-    else:
-        _articles = _articles.limit(n)
-
-    # Big ordered dict of dates.
-    for article in _articles:
-        if article.published not in articles:
-            articles[article.published] = []
-        articles[article.published].append(article)
-
-    return articles
-
 
 @app.route('/feed.atom')
 def atom_feed():
     articles = SavedArticle.query.order_by(
-        desc(SavedArticle.published)
+        desc(SavedArticle.published),
+        desc(SavedArticle.id)
     ).limit(40).all()
 
     for i, article in enumerate(articles):
