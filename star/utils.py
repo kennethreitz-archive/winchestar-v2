@@ -14,7 +14,11 @@ import dateparser
 
 def date(date):
     """Convert string dates (for the lazy)."""
-    return datetparser.parse(date, settings={'TIMEZONE': 'US/Eastern'})
+    date = datetparser.parse(date, settings={'TIMEZONE': 'US/Eastern'})
+    eastern = pytz.timezone('US/Eastern')
+    date = eastern.normalize(date)
+
+    return date
 
 
 def date_range(start, end):
