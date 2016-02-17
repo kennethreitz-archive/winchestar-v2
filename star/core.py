@@ -11,7 +11,7 @@ from os import environ
 from collections import OrderedDict
 
 from flask import Flask, render_template, make_response
-from flaskext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy
 from raven.contrib.flask import Sentry
 from sqlalchemy import desc
 from rfc3339 import rfc3339

@@ -3,7 +3,7 @@
 
 from datetime import datetime
 
-from flaskext.script import Manager
+from flask.ext.script import Manager
 
 from star import app
 from star.core import db, SavedArticle
