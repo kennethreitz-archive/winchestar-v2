@@ -7,7 +7,7 @@ html2text
 mistune
 psycopg2
 pyquery
-python-dateutil==1.5
+dateparser
 raven
 requests
 pytz

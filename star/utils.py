@@ -8,22 +8,13 @@ Utilities.
 """
 
 import datetime
-import dateutil.parser
-import pytz
+
+import dateparser
 
 
 def date(date):
     """Convert string dates (for the lazy)."""
-    if isinstance(date, basestring):
-        date = dateutil.parser.parse(unicode(date))
-
-    # Provided dates are in EST.
-    date = pytz.est.localize(date)
-
-    # Dates only, please.
-    assert isinstance(date, datetime.datetime)
-
-    return date
+    return datetparser.parse(date, settings={'TIMEZONE': 'US/Eastern'})
 
 
 def date_range(start, end):
