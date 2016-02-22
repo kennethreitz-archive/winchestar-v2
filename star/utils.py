@@ -14,6 +14,9 @@ import dateparser
 
 def date(date):
     """Convert string dates (for the lazy)."""
+    if isinstance(date, datetime.datetime):
+        return date
+
     date = dateparser.parse(date, settings={'TIMEZONE': 'US/Eastern'})
     # date = dateparser.parse(date)
     eastern = pytz.timezone('US/Eastern')
