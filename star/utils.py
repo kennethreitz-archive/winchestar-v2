@@ -19,8 +19,8 @@ def date(date):
 
     date = dateparser.parse(date, settings={'TIMEZONE': 'US/Eastern'})
     # date = dateparser.parse(date)
-    eastern = pytz.timezone('US/Eastern')
-    date = eastern.normalize(date)
+    # eastern = pytz.timezone('US/Eastern')
+    # date = eastern.normalize(date)
 
     return date
 
