@@ -10,7 +10,7 @@ The core of the star.
 from os import environ
 from collections import OrderedDict
 
-from flask import Flask, render_template, make_response
+from flask import Flask, render_template, make_response, request
 from flask.ext.sqlalchemy import SQLAlchemy
 from raven.contrib.flask import Sentry
 from sqlalchemy import desc
