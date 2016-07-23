@@ -4,7 +4,7 @@
   <link type="text/html" rel="alternate" href="http://winchesterstar.com"/>
   <link type="application/atom+xml" rel="self" href="http://winchestar.herokuapp.com/feed.atom"/>
   <title>Winchester Star Articles</title>
-  <updated>2011-11-15T12:09:45-08:00</updated>
+  <updated>2016-07-23T12:09:45-08:00</updated>
 
   {% for article in articles %}
     <entry>
