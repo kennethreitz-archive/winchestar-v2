@@ -65,10 +65,15 @@ class SavedArticle(db.Model):
 
 @app.route('/feed.atom')
 def atom_feed():
+
+    # Default length, over-ridable, is 40.
+    # Let an exception occur if invalid data passed.
+    length = int(request.args.get('length', 40))
+
     articles = SavedArticle.query.order_by(
         desc(SavedArticle.published),
         desc(SavedArticle.id)
-    ).limit(40).all()
+    ).limit(length).all()
 
     for i, article in enumerate(articles):
         article.body = markdown(article.body)
