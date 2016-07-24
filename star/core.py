@@ -63,6 +63,19 @@ class SavedArticle(db.Model):
 
 
 
+
+
+@app.route('/')
+def link_to_atom_feed():
+
+    r = (
+        '<html><head><link rel="alternate" type="application/atom+xml" '
+        'title="Articles" href="/feed.atom" /></head><body><p><a href="/feed.atom">'
+        'feed.atom</a>.</p></body></html>'
+    )
+
+    return r
+
 @app.route('/feed.atom')
 def atom_feed():
 
